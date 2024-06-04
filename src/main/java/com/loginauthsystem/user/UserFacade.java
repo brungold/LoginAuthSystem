@@ -2,14 +2,13 @@ package com.loginauthsystem.user;
 
 import com.loginauthsystem.user.dto.UserDto;
 import com.loginauthsystem.user.dto.UserRequestDto;
-import com.loginauthsystem.user.entity.User;
-import lombok.AllArgsConstructor;
+import com.loginauthsystem.user.entity.UserRole;
+import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.List;
+
 
 @Component
 @RequiredArgsConstructor
@@ -17,9 +16,8 @@ public class UserFacade {
     private final UserService userService;
 
 
-
     public UserDto save(UserRequestDto userRequestDto) {
-
+        return userService.save(userRequestDto);
     }
 
     public UserDto findById(Long id) {
@@ -30,25 +28,20 @@ public class UserFacade {
         return userDto;
     }
 
-    public String registerANewUser(User user) {
-        if (userExists(user)) {
-            throw new IllegalStateException("email already taken");
+    public UserDto findByEmail(String email) {
+        UserDto userDto = userService.findByEmail(email);
+        if (userDto == null) {
+            throw new IllegalStateException("User not found");
         }
-
-        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-
-        user.setPassword(encodedPassword);
-
-        userRepository.save(user);
-
-        String token = UUID.randomUUID().toString();
-
-        //TODO
-        //ConfirmationToken confirmationToken = new ConfirmationToken();
+        return  userDto;
     }
 
-    private boolean userExists(User user) {
-        return userRepository.findByEmail(user.getEmail())
-                .isPresent();
+    public List<UserDto> findUsersByRoles(UserRole role) {
+        List<UserDto> roles = userService.findUsersByRole(role.toString());
+        if (roles == null) {
+            throw new IllegalStateException("There are no user with this role...");
+        }
+        return roles;
     }
+
 }
