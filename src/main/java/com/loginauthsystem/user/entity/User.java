@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,6 +19,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,17 +30,30 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_sequence")
-    @SequenceGenerator(name = "user_id_sequence", sequenceName = "user_id_sequence", allocationSize = 1)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "user_id_sequence"
+    )
+    @SequenceGenerator(
+            name = "user_id_sequence",
+            sequenceName = "user_id_sequence",
+            allocationSize = 1
+    )
     private Long id;
 
     private String firstName;
     private String lastName;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "password", nullable = false)
     private String password;
+
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<UserRole> userRoles;

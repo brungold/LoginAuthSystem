@@ -4,8 +4,8 @@ import com.loginauthsystem.registration.dto.RegisterRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class RegistrationController {
     private RegistrationService registrationService;
-    public ResponseEntity<Void> register(@ResponseBody RegisterRequestDto registerRequestDto) {
+    public ResponseEntity<Void> register(@RequestBody RegisterRequestDto registerRequestDto) {
+        log.info("New user registration request");
 
+        return ResponseEntity.ok().build();
     }
 }

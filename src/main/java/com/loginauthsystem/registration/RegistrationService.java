@@ -1,6 +1,7 @@
 package com.loginauthsystem.registration;
 
 import com.loginauthsystem.registration.dto.RegisterRequestDto;
+import com.loginauthsystem.user.UserFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -9,9 +10,13 @@ import org.springframework.stereotype.Service;
 @Log4j2
 @RequiredArgsConstructor
 public class RegistrationService {
+    private final UserFacade userFacade;
     public void register(RegisterRequestDto registerRequestDto) {
-       log.info("A new user try register account...");
+       log.info("The client is trying to create a new user");
 
-       registerRequestDto.
+       if (userFacade.isUserExists(registerRequestDto.getEmail())) {
+           throw new IllegalStateException("An account already exists on this email");
+       }
+
     }
 }

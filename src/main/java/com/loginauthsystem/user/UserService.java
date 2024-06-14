@@ -35,8 +35,8 @@ public class UserService {
         return UserMapper.fromUserToUserDto(userSaved);
     }
 
-    public boolean userExists(User user) {
-        return userRepository.findByEmail(user.getEmail())
+    public boolean userExists(String email) {
+        return userRepository.findByEmail(email)
                 .isPresent();
     }
     public List<UserDto> findUsersByRole(String role) {

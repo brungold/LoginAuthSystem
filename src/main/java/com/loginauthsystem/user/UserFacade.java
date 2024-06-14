@@ -44,4 +44,7 @@ public class UserFacade {
         return roles;
     }
 
+    public boolean isUserExists(String email) {
+        return userService.userExists(email);
+    }
 }
