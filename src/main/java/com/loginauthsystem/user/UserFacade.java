@@ -20,13 +20,13 @@ public class UserFacade {
         return userService.save(userRequestDto);
     }
 
-    public UserDto findById(Long id) {
-        UserDto userDto = userService.findById(id);
-        if (userDto == null) {
-            throw new IllegalStateException("user not found");
-        }
-        return userDto;
-    }
+//    public UserDto findById(Long id) {
+//        UserDto userDto = userService.findById(id);
+//        if (userDto == null) {
+//            throw new IllegalStateException("user not found");
+//        }
+//        return userDto;
+//    }
 
     public UserDto findByEmail(String email) {
         UserDto userDto = userService.findByEmail(email);
@@ -44,7 +44,7 @@ public class UserFacade {
         return roles;
     }
 
-    public boolean isUserExists(String email) {
-        return userService.userExists(email);
-    }
+//    public boolean isUserExists(String email) {
+//        return userService.userExists(email);
+//    }
 }

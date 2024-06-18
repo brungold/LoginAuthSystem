@@ -1,6 +1,5 @@
 package com.loginauthsystem.registration;
 
-import com.loginauthsystem.registration.dto.RegisterRequestDto;
 import com.loginauthsystem.user.UserFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -14,9 +13,6 @@ public class RegistrationService {
     public void register(RegisterRequestDto registerRequestDto) {
        log.info("The client is trying to create a new user");
 
-       if (userFacade.isUserExists(registerRequestDto.getEmail())) {
-           throw new IllegalStateException("An account already exists on this email");
-       }
 
     }
 }

@@ -23,11 +23,11 @@ public class UserService {
                 .orElse(null);
     }
 
-    public UserDto findById(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.map(UserMapper::fromUserToUserDto)
-                .orElse(null); // write exception ?
-    }
+//    public UserDto findById(Long id) {
+//        Optional<User> user = userRepository.findById(id);
+//        return user.map(UserMapper::fromUserToUserDto)
+//                .orElse(null); // write exception ?
+//    }
 
     public UserDto save(UserRequestDto userRequestDto) {
         User user = UserMapper.fromUserRequestDtoToUser(userRequestDto);
