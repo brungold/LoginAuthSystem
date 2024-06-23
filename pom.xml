@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.8</version>
+        <version>3.1.0</version>
         <relativePath/>
     </parent>
 
@@ -19,7 +19,7 @@
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.target>19</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
+        <springfox-boot-starter.version>3.1.0</springfox-boot-starter.version>
         <java-jwt.version>4.0.0</java-jwt.version>
     </properties>
 

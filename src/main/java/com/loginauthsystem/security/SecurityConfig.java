@@ -3,6 +3,7 @@ package com.loginauthsystem.security;
 import com.loginauthsystem.user.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,9 +46,10 @@ public class SecurityConfig {
     public SecurityFilterChain basicSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         log.info("Basic security filter chain LOADED");
         httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(Customizer.withDefaults())
-                .httpBasic(Customizer.withDefaults())
+                //.cors(corsConfigurerCustomer())
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/swagger-resources/**").permitAll()
