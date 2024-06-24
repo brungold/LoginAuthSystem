@@ -2,16 +2,20 @@ package com.loginauthsystem.user.entity;
 
 import com.loginauthsystem.security.util.BaseEntity;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -36,22 +40,22 @@ public class User extends BaseEntity {
     )
     private Long id;
 
-
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false)
     private String password;
 
     private boolean enabled = true;
-
+    @ElementCollection
+    @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "authority")
     private Collection<String> authorities = new HashSet<>();
 
-    public User(String email, String password, boolean enabled, Collection<String> userRoles) {
+    public User(String email, String password, boolean enabled, Collection<String> authorities) {
         this.email = email;
         this.password = password;
         this.enabled = enabled;
-        this.authorities = userRoles;
+        this.authorities = authorities;
     }
 }
 
