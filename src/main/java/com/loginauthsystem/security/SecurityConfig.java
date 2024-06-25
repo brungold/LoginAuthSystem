@@ -1,5 +1,6 @@
 package com.loginauthsystem.security;
 
+import com.loginauthsystem.security.jwt.JwtAuthTokenFilter;
 import com.loginauthsystem.user.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @AllArgsConstructor
@@ -41,13 +43,15 @@ public class SecurityConfig {
 
     }
     @Bean
-    public SecurityFilterChain basicSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain basicSecurityFilterChain(HttpSecurity httpSecurity, JwtAuthTokenFilter jwtAuthTokenFilter) throws Exception {
         log.info("Basic security filter chain LOADED");
         httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
                 //.cors(corsConfigurerCustomer())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/swagger-resources/**").permitAll()
@@ -55,7 +59,6 @@ public class SecurityConfig {
                         .requestMatchers("/users/register/**").permitAll()
                         .anyRequest().authenticated())
                 .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(Customizer.withDefaults());
         return httpSecurity.build();
     }

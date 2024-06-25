@@ -1,8 +1,9 @@
 package com.loginauthsystem.security.util;
 
+import jakarta.persistence.Version;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Version;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
