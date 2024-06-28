@@ -1,11 +1,8 @@
 package com.loginauthsystem.security;
 
 import com.loginauthsystem.user.entity.User;
-import com.loginauthsystem.user.entity.UserRole;
-import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
