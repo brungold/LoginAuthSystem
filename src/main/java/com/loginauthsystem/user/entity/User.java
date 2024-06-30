@@ -1,102 +1,61 @@
 package com.loginauthsystem.user.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.loginauthsystem.security.util.BaseEntity;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+
 import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+
 
 @Entity
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class User implements UserDetails {
+public class User extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_sequence")
-    @SequenceGenerator(name = "user_id_sequence", sequenceName = "user_id_sequence", allocationSize = 1)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "user_id_sequence"
+    )
+    @SequenceGenerator(
+            name = "user_id_sequence",
+            sequenceName = "user_id_sequence",
+            allocationSize = 1
+    )
     private Long id;
 
-    private String firstName;
-    private String lastName;
+    @Column(nullable = false, unique = true)
     private String email;
-    private String password;
-    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
-    private Set<UserRole> userRoles;
-    private Boolean locked = false;
-    private Boolean enabled = false;
 
-    public User(String firstName, String lastName, String email, String password, Set<UserRole> userRoles, Boolean locked, Boolean enabled) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    private String password;
+
+    private boolean enabled = true;
+    @ElementCollection
+    @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "authority")
+    private Collection<String> authorities = new HashSet<>();
+
+    public User(String email, String password, boolean enabled, Collection<String> authorities) {
         this.email = email;
         this.password = password;
-        this.userRoles = userRoles;
-        this.locked = locked;
         this.enabled = enabled;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return userRoles.stream()
-                .map(userRole -> new SimpleGrantedAuthority(userRole.getAuthority()))
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return !locked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
+        this.authorities = authorities;
     }
 }
+

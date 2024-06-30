@@ -1,4 +1,4 @@
-package com.loginauthsystem.user.entity;
+package com.loginauthsystem.user;
 
 import org.springframework.security.core.GrantedAuthority;
 
