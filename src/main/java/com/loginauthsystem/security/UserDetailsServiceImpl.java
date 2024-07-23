@@ -1,5 +1,6 @@
 package com.loginauthsystem.security;
 
+import com.loginauthsystem.user.UserConformer;
 import com.loginauthsystem.user.UserRepository;
 import com.loginauthsystem.user.entity.User;
 import lombok.AllArgsConstructor;
@@ -8,16 +9,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
-@Service
+
 @Log4j2
 @AllArgsConstructor
 class UserDetailsServiceImpl implements UserDetailsManager {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserConformer userConformer;
     public static final String DEFAULT_USER_ROLE = "USER";
 
     @Override
@@ -33,17 +37,18 @@ class UserDetailsServiceImpl implements UserDetailsManager {
             log.warn("not saved user - already exists");
             throw new RuntimeException("not saved user - already exists");
         }
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
         User createdUser = new User(
                 user.getUsername(),
-                encodedPassword,
-                true,
-                List.of(DEFAULT_USER_ROLE)
+                passwordEncoder.encode(user.getPassword()),
+                UUID.randomUUID().toString(),
+                user.getAuthorities()
+                        .stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList())
         );
-        User savedUser = userRepository.save(createdUser);
-        log.info("Saved user with Id: " + savedUser.getId());
-        // TODO
-        // send email confirmation
+        userRepository.save(createdUser);
+        System.out.println("saved user");
+        userConformer.sendConfirmationEmail(createdUser);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.loginauthsystem.security;
 
 import com.loginauthsystem.security.jwt.JwtAuthTokenFilter;
 import com.loginauthsystem.user.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,11 +25,9 @@ import java.util.List;
 
 
 @Configuration
-@AllArgsConstructor
 @Log4j2
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl apiUserDetailsService;
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();

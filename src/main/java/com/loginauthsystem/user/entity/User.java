@@ -2,14 +2,11 @@ package com.loginauthsystem.user.entity;
 
 import com.loginauthsystem.security.util.BaseEntity;
 
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -45,16 +42,43 @@ public class User extends BaseEntity {
 
     private String password;
 
-    private boolean enabled = true;
-    @ElementCollection
-    @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "authority")
+    private String confirmationToken;
+
+    private boolean enabled = false;
+
     private Collection<String> authorities = new HashSet<>();
 
-    public User(String email, String password, boolean enabled, Collection<String> authorities) {
+    public boolean confirm(){
+        this.setEnabled(true);
+        this.setConfirmationToken(null);
+        return true;
+    }
+
+    public Long getId() {
+        return id;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public Collection<String> getAuthorities() {
+        return authorities;
+    }
+
+    public String getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public User(String email, String password, String confirmationToken, Collection<String> authorities) {
         this.email = email;
         this.password = password;
-        this.enabled = enabled;
+        this.confirmationToken = confirmationToken;
         this.authorities = authorities;
     }
 }
